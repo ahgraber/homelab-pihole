@@ -72,3 +72,4 @@ pause() # wait forever
 * Log in with `ssh pi@<raspberry_pi_name>.local`
 * Restart with `sudo shutdown -r now`
 * Shut down with `sudo shutdown -h now`
+* Check what python scripts are running with `ps -aef | grep python`
