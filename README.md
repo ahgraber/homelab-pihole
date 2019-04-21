@@ -29,45 +29,45 @@
     * as with the stats.py script, add `sudo shutdown.py &` to the bottom of rc.local with `sudo nano /etc/rc.local`
     * reboot and see if shutdown.py script is running with `ps -aef | grep python`.  If it is, try shorting out the rightmost top and bottom pins to test reboot/shut down
     * if everything is good, solder the momentary switch between the rightmost top and bottom pins.
-    
- ```
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
-# example gpiozero code that could be used to have a reboot
-#  and a shutdown function on one GPIO button
-# scruss - 2017-10, ahgraber - 2019-04
+      ```
+      #!/usr/bin/python3
+      # -*- coding: utf-8 -*-
+      # example gpiozero code that could be used to have a reboot
+      #  and a shutdown function on one GPIO button
+      # scruss - 2017-10, ahgraber - 2019-04
 
-use_button=21                       # rightmost top/bottom pins on PiZero
+      use_button=21                       # rightmost top/bottom pins on PiZero
 
-from gpiozero import Button
-from signal import pause
-from subprocess import check_call
+      from gpiozero import Button
+      from signal import pause
+      from subprocess import check_call
 
-held_for=0.0
+      held_for=0.0
 
-def rls():
-        global held_for
-        if (held_for > 5.0):       # power off if long hold
-                check_call(['sudo','shutdown','-h','now'])
-        elif (held_for > 2.0):     # restart if short hold
-                check_call(['sudo','shutdown','-r','now'])
-        else:
-        	held_for = 0.0
+      def rls():
+              global held_for
+              if (held_for > 5.0):       # power off if long hold
+                      check_call(['sudo','shutdown','-h','now'])
+              elif (held_for > 2.0):     # restart if short hold
+                      check_call(['sudo','shutdown','-r','now'])
+              else:
+               held_for = 0.0
 
-def hld():
-        # callback for when button is held
-        #  is called every hold_time seconds
-        global held_for
-        # need to use max() as held_time resets to zero on last callback
-        held_for = max(held_for, button.held_time + button.hold_time)
+      def hld():
+              # callback for when button is held
+              #  is called every hold_time seconds
+              global held_for
+              # need to use max() as held_time resets to zero on last callback
+              held_for = max(held_for, button.held_time + button.hold_time)
 
-button=Button(use_button, hold_time=1.0, hold_repeat=True)
-button.when_held = hld
-button.when_released = rls
+      button=Button(use_button, hold_time=1.0, hold_repeat=True)
+      button.when_held = hld
+      button.when_released = rls
 
-pause() # wait forever
- ```
-    
+      pause() # wait forever
+      ```
+6. Back up the card! (https://computers.tutsplus.com/articles/how-to-clone-raspberry-pi-sd-cards-using-the-command-line-in-os-x--mac-59911)
+
 ## Common references
 * Log in with `ssh pi@<raspberry_pi_name>.local`
 * Restart with `sudo shutdown -r now`
