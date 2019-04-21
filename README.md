@@ -27,6 +27,8 @@
     * use `nano ~pi/shutdown.py` to enter editor
     * paste code below, then use **ctrl-o** to save and **ctrl-x** to exit
     * as with the stats.py script, add `sudo shutdown.py &` to the bottom of rc.local with `sudo nano /etc/rc.local`
+    * reboot and see if shutdown.py script is running with `ps -aef | grep python`.  If it is, try shorting out the rightmost top and bottom pins to test reboot/shut down
+    * if everything is good, solder the momentary switch between the rightmost top and bottom pins.
     
  ```
 #!/usr/bin/python3
