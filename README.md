@@ -75,7 +75,8 @@
 * Shut down with `sudo shutdown -h now`
 * Check what python scripts are running with `ps -aef | grep python`
 
-## Router + Pihole setup
+## Router + Pihole setup 
+(see also https://discourse.pi-hole.net/t/how-do-i-configure-my-devices-to-use-pi-hole-as-their-dns-server/245)
 _assuming using Tomato/AdvancedTomato_  
 **On Router**  
 * Set two static upstream DNS servers in Basic > Network > LAN > Static DNS. Save your changes.  
