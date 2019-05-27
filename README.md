@@ -74,3 +74,14 @@
 * Restart with `sudo shutdown -r now`
 * Shut down with `sudo shutdown -h now`
 * Check what python scripts are running with `ps -aef | grep python`
+
+## Router + Pihole setup
+_assuming using Tomato/AdvancedTomato_  
+**On Router**  
+* Set two static upstream DNS servers in Basic > Network > LAN > Static DNS. Save your changes.  
+* UNcheck "Use received DNS with user-entered DNS", & check "Intercept DNS port (UDP 53)". 
+* Keep "dhcp-option=6,<pi-hole_IP_address> under "Dnsmasq custom configuration". Save your changes again.
+**On Pihole**  
+* Log into your pi-hole and head to Settings > DNS > Upstream DNS Servers. Under "Custom 1 (IPv4)", check the box and enter "192.168.1.1". Leave ALL the other providers unchecked.
+
+
