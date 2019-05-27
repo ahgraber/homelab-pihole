@@ -12,7 +12,6 @@
     * If your router has usb that provides sufficient power, power your pi from the usb out on the router
     * Plug ethernet in if you have the optional dongle
     * Set your router to provide the pi with a static IP address
-    * *__optional__* Enable DNS over HTTPS (https://docs.pi-hole.net/guides/dns-over-https/)
 2. Install PiHole (https://learn.adafruit.com/pi-hole-ad-blocker-with-pi-zero-w?view=all#install-pi-hole)
 3. Set up PiOLED (https://learn.adafruit.com/pi-hole-ad-blocker-with-pi-zero-w?view=all#install-pioled)  
   Supporting installs include:
@@ -85,4 +84,4 @@ _assuming using Tomato/AdvancedTomato_
 **On Pihole**  
 * Log into your pi-hole and head to Settings > DNS > Upstream DNS Servers. Under "Custom 1 (IPv4)", check the box and enter "192.168.1.1". Leave ALL the other providers unchecked.
 
-
+Note: *__optional__* Enable DNS over HTTPS (https://docs.pi-hole.net/guides/dns-over-https/) - this breaks the dnsmasq that allows host identification in admin console.
