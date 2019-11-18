@@ -17,53 +17,19 @@
   Supporting installs include:
     * `sudo apt-get install python3-pip`
     * `sudo pip3 install RPI.GPIO`
+    * `sudo pip3 install gpiozero`
     * `sudo pip3 install adafruit-blinka`
     * `sudo pip3 install adafruit-circuitpython-ssd1306`
     * `sudo apt-get install python3-pil`
-    * see other setup steps and scripts from linked page
+    * see other setup steps and scripts from linked page; https://github.com/ahgraber/pihole/blob/master/stats.py
 4. Set up log2rm (https://github.com/azlux/log2ram) to avoid burning out SD card writing queries
-5. Set up shutdown/reboot button (inspiration from https://scruss.com/blog/2017/10/21/combined-restart-shutdown-button-for-raspberry-pi/):
-    * `sudo apt-get install python3-gpiozero`
-    * use `nano ~pi/shutdown.py` to enter editor
-    * paste code below, then use **ctrl-o** to save and **ctrl-x** to exit
-      ```
-      #!/usr/bin/python3
-      # -*- coding: utf-8 -*-
-      # example gpiozero code that could be used to have a reboot
-      #  and a shutdown function on one GPIO button
-      # scruss - 2017-10, ahgraber - 2019-04
-
-      use_button=21                       # rightmost top/bottom pins on PiZero
-
-      from gpiozero import Button
-      from signal import pause
-      from subprocess import check_call
-
-      held_for=0.0
-
-      def rls():
-              global held_for
-              if (held_for > 5.0):       # power off if long hold
-                      check_call(['sudo','shutdown','-h','now'])
-              elif (held_for > 2.0):     # restart if short hold
-                      check_call(['sudo','shutdown','-r','now'])
-              else:
-               held_for = 0.0
-
-      def hld():
-              # callback for when button is held
-              #  is called every hold_time seconds
-              global held_for
-              # need to use max() as held_time resets to zero on last callback
-              held_for = max(held_for, button.held_time + button.hold_time)
-
-      button=Button(use_button, hold_time=1.0, hold_repeat=True)
-      button.when_held = hld
-      button.when_released = rls
-
-      pause() # wait forever
-      ```
-    * as with the stats.py script, add `sudo shutdown.py &` to the bottom of rc.local with `sudo nano /etc/rc.local`
+5. Set up shutdown/reboot button (inspiration from https://scruss.com/blog/2017/10/21/combined-restart-shutdown-button-for-raspberry-pi/) with shutdown.py script: 
+    * https://github.com/ahgraber/pihole/blob/master/shutdown.py
+    * create shutdown service for systemctl (see https://github.com/ahgraber/pihole/blob/master/shutdown.service) and copy to location with `sudo cp shutdown.service /etc/systemd/system/shutdown.service`
+    * start service with `sudo systemctl start shutdown.service`  
+    * set shutdown service to run on startup with `sudo systemctl enable shutdown.service`  
+    * set stats service to run on startup with `sudo systemctl enable stats.service`
+    
     * reboot and see if shutdown.py script is running with `ps -aef | grep python`.  If it is, try shorting out the rightmost top and bottom pins to test reboot/shut down
     * if everything is good, solder the momentary switch between the rightmost top and bottom pins.
 6. Back up the card! (https://computers.tutsplus.com/articles/how-to-clone-raspberry-pi-sd-cards-using-the-command-line-in-os-x--mac-59911)
