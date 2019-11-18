@@ -4,7 +4,7 @@ After=sysinit.target
 
 [Service]
 ExecStart=/usr/bin/python3 -u shutdown.py
-WorkingDirectory=/home/py
+WorkingDirectory=/home/pi
 StandardOutput=inherit
 StandardError=inherit
 Restart=always
