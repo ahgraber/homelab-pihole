@@ -1,0 +1,14 @@
+[Unit]
+Description=Shutdown Service
+After=sysinit.target
+
+[Service]
+ExecStart=/usr/bin/python3 -u main.py
+WorkingDirectory=/home/py
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+Uers=pi
+
+[Install]
+WantedBy=multi-user.target
