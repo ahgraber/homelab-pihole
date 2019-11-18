@@ -29,9 +29,6 @@
     * start service with `sudo systemctl start shutdown.service`  
     * set shutdown service to run on startup with `sudo systemctl enable shutdown.service`  
     * set stats service to run on startup with `sudo systemctl enable stats.service`
-    
-    * reboot and see if shutdown.py script is running with `ps -aef | grep python`.  If it is, try shorting out the rightmost top and bottom pins to test reboot/shut down
-    * if everything is good, solder the momentary switch between the rightmost top and bottom pins.
 6. Back up the card! (https://computers.tutsplus.com/articles/how-to-clone-raspberry-pi-sd-cards-using-the-command-line-in-os-x--mac-59911)
 
 ## Common references
