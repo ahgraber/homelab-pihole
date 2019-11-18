@@ -3,7 +3,7 @@ Description=Shutdown Service
 After=sysinit.target
 
 [Service]
-ExecStart=/usr/bin/python3 -u main.py
+ExecStart=/usr/bin/python3 -u shutdown.py
 WorkingDirectory=/home/py
 StandardOutput=inherit
 StandardError=inherit
