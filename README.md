@@ -7,7 +7,7 @@
 4. *__optional__* PiOLED 128x32 screen (https://www.adafruit.com/product/3527) 
 5. *__optional__* momentary switch (something like these: https://www.amazon.com/Cylewet-Momentary-Button-Switch-CYT1078/dp/B0752RMB7Q/)
 
-## Instructions (follow Adafruit guide):
+## Instructions:
 1. Set up Raspberry Pi (https://learn.adafruit.com/pi-hole-ad-blocker-with-pi-zero-w?view=all#prepare-the-pi)
     * If your router has usb that provides sufficient power, power your pi from the usb out on the router
     * Plug ethernet in if you have the optional dongle
