@@ -10,7 +10,7 @@
 
 # set hostname
 NAME="pi-hole"
-
+ADDITIONAL_CONDITIONAL=false  # set with true/false
 ###############################
 ###   clean host identity   ###
 ###############################
@@ -193,7 +193,34 @@ read -p "Press any key to continue..." input
 pihole -r
 
 
-############################
+#########################################
+###   set up conditional forwarding   ###
+#########################################
+if [ $ADDITIONAL_CONDITIONAL = true]; then
+    # WARNING: this will overwrite and replace /etc/dnsmasq.d/02-custom.conf!
+    # make backup if file exists
+    [ -f "/etc/dnsmasq.d/02-custom.conf" ] \
+        && sudo cp /etc/dnsmasq.d/02-custom.conf /etc/dnsmasq.d/02-custom.conf.old
+
+    # tell pihole to forward all requests for domain to router
+    echo \
+    "
+    server=/pihole.ninerealmlabs.com/10.0.0.1
+    server=/pi-hole.ninerealmlabs.com/10.0.0.1
+    server=/homeassistant.ninerealmlabs.com/10.3.0.1
+
+    server=/0.10.in-addr.arpa/10.0.0.1
+    server=/1.10.in-addr.arpa/10.1.0.1
+    server=/2.10.in-addr.arpa/10.2.0.1
+    server=/3.10.in-addr.arpa/10.3.0.1
+
+    # more specific lookup example
+    # server=/ubuntu.muspellheimxi.ninerealmlabs.com/10.2.2.1
+    " \
+    | sudo tee /etc/dnsmasq.d/02-custom.conf
+fi
+
+###########################
 ###   install display   ###
 ###########################
 # install dependencies
