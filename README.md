@@ -20,22 +20,24 @@ From a fresh Raspbian OS install:
 2. Boot pi & confirm ssh works
 
 3. From *remote admin computer*: 
-   1. Copy SSH keys:
-   ```ssh-copy-id -i ~/.ssh/ahgraber_id_rsa.pub <username>@<server ip>```
-   ```ssh-copy-id -i ~/.ssh/ahg_ninerealmlabs_id_rsa.pub <username>@<server ip>```
-   2. Copy files (from <git repo>/infrastructure/pihole/) by running ```sh copy_to_pi.sh```:
+    1. Copy SSH keys:
+        ```ssh-copy-id -i ~/.ssh/ahgraber_id_rsa.pub <username>@<server ip>```
+        ```ssh-copy-id -i ~/.ssh/ahg_ninerealmlabs_id_rsa.pub <username>@<server ip>```
+    2. Copy files (from <git repo>/infrastructure/pihole/) by running ```sh copy_to_pi.sh```:
 
 4. SSH into pi:
-   1. *Update setup scripts to update domain, hostname, and ip addresses*
-   2. Run (*Do not run with `sudo`*):
-   ```sh 0\ -\ setup_host.sh``` to complete host setup, enable firewall, and install pihole
-   ```sh 1\ -\ setup_vlan.sh``` to complete vlan setup
-   *Don't forget to update the VLAN configuration on the router & switch!!!*
-   ```sh 2\ -\ setup_letsencrypt.sh``` to complete letsencrypt certification
+    1. *Update setup scripts to update internal ip addresses, since these are hardcoded*
+    2. Run (*Do not run with `sudo`*):
+        ```sh 0\ -\ setup_host.sh``` to complete host setup
+        ```sh 1\ -\ setup_pihole.sh``` to enable firewall, and install pihole
+        ```sh 2\ -\ setup_vlan.sh``` to complete vlan setup
+        *Don't forget to update the VLAN configuration on the router & switch!!!*
+        ```sh 3\ -\ setup_letsencrypt.sh``` to complete letsencrypt certification
 
 5. Set up shutdown/reboot button (inspiration from https://scruss.com/blog/2017/10/21/combined-restart-shutdown-button-for-raspberry-pi/) with shutdown.py script: 
     * https://github.com/ahgraber/pihole/blob/master/shutdown.py
-    * create shutdown service for systemctl (see https://github.com/ahgraber/pihole/blob/master/shutdown.service) and copy to location with `sudo cp shutdown.service /etc/systemd/system/shutdown.service`
+    * create shutdown service for systemctl (see https://github.com/ahgraber/pihole/blob/master/shutdown.service) 
+        and copy to location with `sudo cp shutdown.service /etc/systemd/system/shutdown.service`
     * start service with `sudo systemctl start shutdown.service`  
     * set shutdown service to run on startup with `sudo systemctl enable shutdown.service`  
     * set stats service to run on startup with `sudo systemctl enable stats.service`
@@ -51,7 +53,6 @@ From a fresh Raspbian OS install:
 
 #### Pihole Blocklists
 * [anudeepND](https://github.com/anudeepND)
-
 
 
 ### 3. [Back up the card!](https://computers.tutsplus.com/articles/how-to-clone-raspberry-pi-sd-cards-using-the-command-line-in-os-x--mac-59911)
