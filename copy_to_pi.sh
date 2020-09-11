@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # run from admin computer
-read -p "Input target <IP>:" IP
-read -p "Input <USERNAME> (@target):" USER
+read -p "Input target <IP>: " IP
+read -p "Input <USERNAME> @ <target>: " USER
 
 scp ./0\ -\ setup_host.sh $USER@$IP:/home/$USER/
 scp ./1\ -\ setup_pihole.sh $USER@$IP:/home/$USER/

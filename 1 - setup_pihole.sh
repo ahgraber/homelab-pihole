@@ -174,7 +174,7 @@ server=/ninerealmlabs.com/10.0.0.1
 | sudo tee --append /etc/dnsmasq.d/01-pihole.conf
 
 
-read -p "Set up additional conditional forwarding (y/n):?" CHOICE
+read -p "Set up additional conditional forwarding? (y/n): " CHOICE
 case "$CHOICE" in 
   y|Y ) ADDITIONAL_CONDITIONAL=true;;
   n|N ) ADDITIONAL_CONDITIONAL=false;;

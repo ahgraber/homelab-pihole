@@ -4,8 +4,8 @@
 # runs initial host setup
 
 # set hostname
-read -p "Please provide hostname:" NAME
-read -p "Please provide target IP (10.0.__.__):" IP
+read -p "Please provide hostname: " NAME
+read -p "Please provide target IP (10.0.__.__): " IP
 
 ###############################
 ###   convenience aliases   ###
@@ -33,7 +33,7 @@ rm -rf /home/pi/Templates/
 rm -rf /home/pi/Videos/
 
 # reset password
-read -p "Reset password (y/n)?" RESET_PWD
+read -p "Reset password? (y/n): " RESET_PWD
 case "$RESET_PWD" in 
   y|Y ) passwd;;
   n|N ) echo "Password unchanged.";;

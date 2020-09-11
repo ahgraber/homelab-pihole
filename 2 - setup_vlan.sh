@@ -2,7 +2,7 @@
 # script to set up 'default' vlan config for pihole
 
 # set ip
-read -p "Please provide target IP (10.0.__.__):" IP
+read -p "Please provide target IP (10.0.__.__): " IP
 
 ########################
 ###   set up vlans   ###
@@ -27,28 +27,28 @@ iface eth0.86 inet static
 vlan-raw-device eth0
 address 10.0.'$IP'
 network 10.0.0.0/22
-broadcast 10.0.0.255
+broadcast 10.0.3.255
 
 auto eth0.10
 iface eth0.10 inet static
 vlan-raw-device eth0
 address 10.1.'$IP'
 network 10.1.0.0/22
-broadcast 10.1.0.255
+broadcast 10.1.3.255
 
 auto eth0.20
 iface eth0.20 inet static
 vlan-raw-device eth0
 address 10.2.'$IP'
 network 10.2.0.0/16
-broadcast 10.2.0.255
+broadcast 10.2.255.255
 
 auto eth0.30
 iface eth0.30 inet static
 vlan-raw-device eth0
 address 10.3.'$IP'
 network 10.3.0.0/20
-broadcast 10.3.0.255
+broadcast 10.3.15.255
 ' \
 | sudo tee /etc/network/interfaces.d/interfaces
 
