@@ -19,13 +19,13 @@ From a fresh Raspbian OS install:
 
 2. Boot pi & confirm ssh works
 
-3. From *remote admin computer*: 
+3. From *local admin computer*: 
     1. Copy SSH keys:
         ```ssh-copy-id -i ~/.ssh/ahgraber_id_rsa.pub <username>@<server ip>```
         ```ssh-copy-id -i ~/.ssh/ahg_ninerealmlabs_id_rsa.pub <username>@<server ip>```
     2. Copy files (from <git repo>/infrastructure/pihole/) by running ```sh copy_to_pi.sh```:
 
-4. SSH into pi:
+4. SSH into remote pi:
     1. *Update setup scripts to update internal ip addresses, since these are hardcoded*
     2. Run (*Do not run with `sudo`*):
         ```sh 0\ -\ setup_host.sh``` to complete host setup
