@@ -1,6 +1,7 @@
 # Gitignore
 
 ### Secrets ###
+.secrets
 cloudflare.ini
 
 ###   MacOS   ###
