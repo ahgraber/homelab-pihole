@@ -209,20 +209,29 @@ fi
 ###########################
 ###   install display   ###
 ###########################
-# install dependencies
-echo "\n Installing display..."
-sudo apt install python3-pip
-sudo pip3 install RPI.GPIO gpiozero adafruit-blinka adafruit-circuitpython-ssd1306
-sudo apt install python3-pil
-wget http://kottke.org/plus/type/silkscreen/download/silkscreen.zip
-unzip silkscreen.zip
-rm silkscreen.zip && rm readme.txt && rm -r __MACOSX/
 
-# create service
-sudo cp stats.service /etc/systemd/system/stats.service \
-&& sudo systemctl start stats.service \
-&& sudo systemctl enable stats.service  
+read -p "Set up piOLED display? (y/n): " CHOICE
+case "$CHOICE" in 
+  y|Y ) OLED=true;;
+  n|N ) OLED=false;;
+  * ) echo "invalid";;
+esac
 
+if [ $OLED = true]; then
+    echo "\n Installing display..."
+    # install dependencies
+    sudo apt install python3-pip
+    sudo apt install python3-pil
+    sudo pip3 install RPI.GPIO gpiozero adafruit-blinka adafruit-circuitpython-ssd1306 requests
+    wget http://kottke.org/plus/type/silkscreen/download/silkscreen.zip
+    unzip silkscreen.zip
+    rm silkscreen.zip && rm readme.txt && rm -r __MACOSX/
+
+    # create service
+    sudo cp stats.service /etc/systemd/system/stats.service \
+    && sudo systemctl start stats.service \
+    && sudo systemctl enable stats.service  
+fi
 
 ##########################
 ###   clean & reboot   ###
