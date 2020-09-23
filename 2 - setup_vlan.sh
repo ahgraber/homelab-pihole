@@ -22,9 +22,10 @@ echo = \
 auto lo
 iface lo inet loopback
 
-auto eth0.86
-iface eth0.86 inet static
-vlan-raw-device eth0
+allow-hotplug eth0
+# VLAN 86 is native; does not need specification
+auto eth0
+iface eth0 inet static
 address 10.0.'$IP'
 network 10.0.0.0/22
 broadcast 10.0.3.255
@@ -60,6 +61,7 @@ broadcast 10.3.15.255
 
 echo \
 '
+interface=eth0
 #interface=eth0.86  # this is the native vlan
 interface=eth0.10
 interface=eth0.20

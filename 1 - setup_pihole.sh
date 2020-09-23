@@ -157,6 +157,11 @@ echo "Set dns to 127.0.0.1#5335"
 read -p "Press any key to continue..." input
 pihole -r
 
+# edit dhcpcd.conf to use unbound
+echo "\nUpdating DNS in /etc/dhcpcd.conf"
+sudo sed -i 's/static domain_name_servers=1.1.1.1 1.0.0.1/static domain_name_servers=127.0.0.1#5335/' /etc/dhcpcd.conf
+sudo systemctl restart networking
+
 #########################################
 ###   set up conditional forwarding   ###
 #########################################

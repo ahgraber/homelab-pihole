@@ -88,9 +88,9 @@ ff02::2         ip6-allrouters
 echo \
 '
 interface eth0
-        static ip_address=10.0.'$IP'/22
-        static routers=10.0.0.1
-        static domain_name_servers=1.1.1.1 1.0.0.1
+    static ip_address=10.0.'$IP'/22
+    static routers=10.0.0.1
+    static domain_name_servers=1.1.1.1 1.0.0.1
 ' \
 | sudo tee --append /etc/dhcpcd.conf
 

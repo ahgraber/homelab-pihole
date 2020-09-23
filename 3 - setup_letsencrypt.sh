@@ -60,7 +60,6 @@ sudo chown www-data -R /etc/letsencrypt/live
     && sudo cp /etc/lighttpd/external.conf \
     /etc/lighttpd/external.conf.old
 
-
 echo \
 '
 $HTTP["host"] == "'$NAME'.ninerealmlabs.com" {
@@ -86,12 +85,12 @@ $HTTP["host"] == "'$NAME'.ninerealmlabs.com" {
   }
 }
 ' \
-| sudo tee --append /etc/lighttpd/external.conf
+| sudo tee /etc/lighttpd/external.conf
 
 echo "Restarting lighttpd web server..."
 # restart web server
 sudo systemctl restart lighttpd.service
 # sudo service  lighttpd restart
 
-echo "If you get a lighttpd error, you may want to try running `pihole -r`"
+echo "If you get a lighttpd error, you may want to try running 'pihole -r'"
 echo "LetsEncrypt script complete.  Consider rebooting."
