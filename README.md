@@ -34,7 +34,7 @@ From a fresh Raspbian OS install:
         *Don't forget to update the VLAN configuration on the router & switch!!!*
         ```sh 3\ -\ setup_letsencrypt.sh``` to complete letsencrypt certification
 
-5. Set up shutdown/reboot button (inspiration from https://scruss.com/blog/2017/10/21/combined-restart-shutdown-button-for-raspberry-pi/) with shutdown.py script: 
+5. Set up [shutdown/reboot button](https://scruss.com/blog/2017/10/21/combined-restart-shutdown-button-for-raspberry-pi/) with shutdown.py script: 
     * https://github.com/ahgraber/pihole/blob/master/shutdown.py
     * create shutdown service for systemctl (see https://github.com/ahgraber/pihole/blob/master/shutdown.service) 
         and copy to location with `sudo cp shutdown.service /etc/systemd/system/shutdown.service`
