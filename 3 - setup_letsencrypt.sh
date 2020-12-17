@@ -33,7 +33,7 @@ sudo certbot renew --dry-run
 
 # add to crontab (find and replace existing certbot script with grep)
 ( crontab -l 2> /dev/null | grep -Fv certbot ; \
-printf -- "47 5 * * * root /root/certbot-auto renew --quiet --no-self-upgrade --renew-hook \
+printf -- "47 3 * * * root /root/certbot-auto renew --quiet --no-self-upgrade --renew-hook \
 'cat \$RENEWED_LINEAGE/privkey.pem \$RENEWED_LINEAGE/cert.pem > \$RENEWED_LINEAGE/combined.pem; \
 systemctl reload-or-try-restart lighttpd'\n" ) \
 | crontab

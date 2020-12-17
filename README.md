@@ -33,8 +33,13 @@ From a fresh Raspbian OS install:
         ```sh 2\ -\ setup_vlan.sh``` to complete vlan setup
         *Don't forget to update the VLAN configuration on the router & switch!!!*
         ```sh 3\ -\ setup_letsencrypt.sh``` to complete letsencrypt certification
+            * add `letsencrypt_for_pihole.sh` as crontab: `crontab -e`
+                in crontab:
+                ```
+                2 4 * * * /path/to/letsencrypt_for_pihole.sh
+                ```
 
-5. Set up [shutdown/reboot button](https://scruss.com/blog/2017/10/21/combined-restart-shutdown-button-for-raspberry-pi/) with shutdown.py script: 
+1. Set up [shutdown/reboot button](https://scruss.com/blog/2017/10/21/combined-restart-shutdown-button-for-raspberry-pi/) with shutdown.py script: 
     * https://github.com/ahgraber/pihole/blob/master/shutdown.py
     * create shutdown service for systemctl (see https://github.com/ahgraber/pihole/blob/master/shutdown.service) 
         and copy to location with `sudo cp shutdown.service /etc/systemd/system/shutdown.service`
