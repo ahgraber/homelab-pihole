@@ -63,4 +63,6 @@ From a fresh Raspbian OS install:
 ### 3. [Back up the card!](https://computers.tutsplus.com/articles/how-to-clone-raspberry-pi-sd-cards-using-the-command-line-in-os-x--mac-59911)
 
 
-### 4. [Keep piholes in sync](https://github.com/vmstan/gravity-sync)
+### 4. Keep piholes in sync
+* [gravity sync](https://github.com/vmstan/gravity-sync)
+* [pihole-cloudsync](https://github.com/stevejenkins/pihole-cloudsync)
