@@ -74,7 +74,7 @@ draw.rectangle((0, 0, width, height), outline=0, fill=0)
 # First define some constants to allow easy resizing of shapes.
 padding = -2
 top = padding
-
+bottom = height - padding
 # Move left to right keeping track of the current x position
 # for drawing shapes.
 x = 0
@@ -87,7 +87,7 @@ while True:
     draw.rectangle((0, 0, width, height), outline=0, fill=0)
 
     # Shell scripts for system monitoring from here :
-    # https://unix.stackexchange.com/questions/119126/command-to-display-memory$
+    # https://unix.stackexchange.com/questions/119126/command-to-display-memory-usage-disk-usage-and-cpu-load
     cmd = "hostname -I | cut -d\' \' -f1 | tr -d \'\\n\'"
     IP = subprocess.check_output(cmd, shell=True).decode("utf-8")
     cmd = "hostname | tr -d \'\\n\'"
@@ -101,7 +101,7 @@ while True:
     cmd = "df -h | awk '$NF==\"/\"{printf " \
             "\"Disk: %d/%dGB %s\", $3,$2,$5}'"
     Disk = subprocess.check_output(cmd, shell=True).decode("utf-8")
-    
+
     # Pi Hole data!
     try:
         r = requests.get(api_url)
@@ -121,7 +121,7 @@ while True:
                 str(CLIENTS), font=font, fill=255)
     draw.text((x, top + 24), "DNS Queries: " +
                 str(DNSQUERIES), font=font, fill=255)
-                
+
     # skip over original stats
     # draw.text((x, top+8),     str(CPU), font=font, fill=255)
     # draw.text((x, top+16),    str(MemUsage),  font=font, fill=255)
@@ -134,3 +134,4 @@ while True:
     disp.fill(0)
     disp.show()
     time.sleep(DISPLAY_OFF)
+
