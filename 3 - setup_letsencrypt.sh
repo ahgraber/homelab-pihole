@@ -21,16 +21,17 @@ pip3 install --upgrade certbot certbot-dns-cloudflare cloudflare
 ################################
 echo \
 '#!/bin/bash
-# assumes will be run as root from crontab
-# `47 3 * * * root /root/certbot-auto renew --quiet --no-self-upgrade --deploy-hook /usr/bin/le_deploy.sh`
+# assumes certbot will be run as root from crontab
+# place script in /etc/letsencrypt/renewal-hooks/deploy for autorun
+# `47 3 * * * root /root/certbot-auto renew --noninteractive --quiet --no-self-$
 cat /etc/letsencrypt/live/${HOSTNAME}.ninerealmlabs.com/privkey.pem \
         /etc/letsencrypt/live/${HOSTNAME}.ninerealmlabs.com/cert.pem | \
 tee /etc/letsencrypt/live/${HOSTNAME}.ninerealmlabs.com/combined.pem
 
 systemctl reload-or-try-restart lighttpd
 ' \
-| sudo tee /usr/bin/le-deploy.sh
-sudo chmod 775 /usr/bin/le-deploy.sh
+| sudo tee /etc/letsencrypt/renewal-hooks/deploy/deploy-certs-4-pihole.sh
+sudo chmod 775 /etc/letsencrypt/renewal-hooks/deploy/deploy-certs-4-pihole.sh
 
 ############################
 ###   get certificates   ###
@@ -49,7 +50,7 @@ sudo certbot renew --dry-run
 
 # add to crontab (find and replace existing certbot script with grep)
 ( crontab -l 2> /dev/null | grep -Fv certbot ; \
-printf -- "47 3 * * * root certbot renew --quiet --no-self-upgrade --deploy-hook /usr/bin/le-deploy.sh\n" ) \
+printf -- "47 3 * * * root certbot renew --noninteractive --quiet --no-self-upgrade\n" ) \
 | crontab
 
 
