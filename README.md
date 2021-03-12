@@ -30,7 +30,7 @@ From a fresh Raspbian OS install:
     2. Run (*Do not run with `sudo`*):
         ```sh 0\ -\ setup_host.sh``` to complete host setup
         ```sh 1\ -\ setup_pihole.sh``` to enable firewall, and install pihole
-        ```sh 2\ -\ setup_vlan.sh``` to complete vlan setup
+        ```sh 2\ -\ setup_vlan.sh``` to complete [vlan setup](https://engineerworkshop.com/blog/raspberry-pi-vlan-how-to-connect-your-rpi-to-multiple-networks/)
         *Don't forget to update the VLAN configuration on the router & switch!!!*
         ```sh 3\ -\ setup_letsencrypt.sh``` to complete letsencrypt certification
             * add `letsencrypt_for_pihole.sh` as crontab: `crontab -e`
