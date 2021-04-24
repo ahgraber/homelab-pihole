@@ -47,6 +47,18 @@ sudo ufw status
 echo "\nInstalling fail2ban..."
 sudo apt install fail2ban
 
+# ignore HomeAssistant (and HomeLab) requests
+echo \
+'[DEFAULT]
+# "ignoreip" can be an IP address, a CIDR mask or a DNS host. Fail2ban will not
+# ban a host which matches an address in this list. Several addresses can be 
+# defined using space separator.
+
+ignoreip = 127.0.0.0/8 10.0.0.0/8
+'\
+| sudo tee /etc/fail2ban/jail.d/jail.local
+
+
 
 ##########################
 ###   install pihole   ###
