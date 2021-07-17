@@ -1,10 +1,10 @@
 # pihole
 
 ## Equipment:
-1. Raspberry Pi Zero W (https://www.adafruit.com/product/3409) 
+1. Raspberry Pi Zero W (https://www.adafruit.com/product/3409)
 2. Colored header for Pi Zero (https://www.adafruit.com/product/3907)
 3. *__optional__* microUSB to ethernet dongle (https://www.amazon.com/gp/product/B00RM3KXAU/)
-4. *__optional__* PiOLED 128x32 screen (https://www.adafruit.com/product/3527) 
+4. *__optional__* PiOLED 128x32 screen (https://www.adafruit.com/product/3527)
 5. *__optional__* momentary switch (something like these: https://www.amazon.com/Cylewet-Momentary-Button-Switch-CYT1078/dp/B0752RMB7Q/)
 
 ## Instructions:
@@ -19,7 +19,7 @@ From a fresh Raspbian OS install:
 
 2. Boot pi & confirm ssh works
 
-3. From *local admin computer*: 
+3. From *local admin computer*:
     1. Copy SSH keys:
         ```ssh-copy-id -i ~/.ssh/ahgraber_id_rsa.pub <username>@<server ip>```
         ```ssh-copy-id -i ~/.ssh/ahg_ninerealmlabs_id_rsa.pub <username>@<server ip>```
@@ -39,16 +39,16 @@ From a fresh Raspbian OS install:
                 2 4 * * * /path/to/letsencrypt_for_pihole.sh
                 ```
 
-1. Set up [shutdown/reboot button](https://scruss.com/blog/2017/10/21/combined-restart-shutdown-button-for-raspberry-pi/) with shutdown.py script: 
+1. Set up [shutdown/reboot button](https://scruss.com/blog/2017/10/21/combined-restart-shutdown-button-for-raspberry-pi/) with shutdown.py script:
     * https://github.com/ahgraber/pihole/blob/master/shutdown.py
-    * create shutdown service for systemctl (see https://github.com/ahgraber/pihole/blob/master/shutdown.service) 
+    * create shutdown service for systemctl (see https://github.com/ahgraber/pihole/blob/master/shutdown.service)
         and copy to location with `sudo cp shutdown.service /etc/systemd/system/shutdown.service`
-    * start service with `sudo systemctl start shutdown.service`  
-    * set shutdown service to run on startup with `sudo systemctl enable shutdown.service`  
+    * start service with `sudo systemctl start shutdown.service`
+    * set shutdown service to run on startup with `sudo systemctl enable shutdown.service`
     * set stats service to run on startup with `sudo systemctl enable stats.service`
 
 ### 2. Pihole setup
-#### Settings > DNS 
+#### Settings > DNS
 1. Set: "Listen on all interfaces; permit all origins"
 2. Uncheck: "Never forward non-FQDNs" and "Never forward reverse lookups for private IP ranges"
 3. Set up **conditional forwarding** to dhcp server / domain
@@ -56,13 +56,60 @@ From a fresh Raspbian OS install:
     ```CONDITIONAL_FORWARDING_REVERSE=10.in-addr.arpa```
 5. Run ```pihole -r``` to repair using the updated setupVars.conf file
 
+#### High Availability with Keepalived
+https://www.reddit.com/r/pihole/comments/d5056q/tutorial_v2_how_to_run_2_pihole_servers_in_ha/
+
+1. Install keepalived and enable
+```
+sudo apt install keepalived ipset -y
+sudo systemctl enable keepalived.service
+```
+2. Install FTL check script
+```
+sudo mkdir -p /etc/scripts
+echo '#!/bin/sh
+# check FTL service
+STATUS=$(ps ax | grep -v grep | grep pihole-FTL)
+
+if [ "$STATUS" != "" ]
+then
+    exit 0
+else
+    exit 1
+fi
+EOF' | sudo tee /etc/scripts/check_ftl.sh
+sudo chmod 755 /etc/scripts/check_ftl.sh
+```
+1. Copy `keepalived-*.conf` files into `/etc/keepalived/keepalived.conf`.  Note differences between `-main` and `-secondary` versions.
+2. Restart keepalived
+```
+sudo systemctl restart keepalived.service
+```
+5. Use the virtual IP addresses as DNS servers
+
+
 #### Pihole Blocklists
 * [anudeepND](https://github.com/anudeepND)
 
+### 3. Firewall Setup w/ OPNsense
+#### OPNSense Unbound
+1. Ensure `Unbound` DNS service is used
 
-### 3. [Back up the card!](https://computers.tutsplus.com/articles/how-to-clone-raspberry-pi-sd-cards-using-the-command-line-in-os-x--mac-59911)
+#### OPNSense General settings
+1. In `System > Settings > General > Networking`:
+   1. set DNS servers to pihole interfaces
+   2. [x] "Do not use the local DNS service as a nameserver for this system"
+2. In `DHCPv4` Service, set per-network DNS
+3. In `Services > Unbound > General`:
+   1. [x] "Register DHCP leases"
+   2. [x] "Register DHCP static mappings"
+   3. [x] "Enable Forwarding Mode"
+   4. Local Zone: `typetransparent`
 
 
-### 4. Keep piholes in sync
+### 4. [Back up the card!](https://computers.tutsplus.com/articles/how-to-clone-raspberry-pi-sd-cards-using-the-command-line-in-os-x--mac-59911)
+
+
+### 5. Keep piholes in sync
 * [gravity sync](https://github.com/vmstan/gravity-sync)
 * [pihole-cloudsync](https://github.com/stevejenkins/pihole-cloudsync)
