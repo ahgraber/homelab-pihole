@@ -51,7 +51,7 @@ sudo apt install fail2ban
 echo \
 '[DEFAULT]
 # "ignoreip" can be an IP address, a CIDR mask or a DNS host. Fail2ban will not
-# ban a host which matches an address in this list. Several addresses can be 
+# ban a host which matches an address in this list. Several addresses can be
 # defined using space separator.
 
 ignoreip = 127.0.0.0/8 10.0.0.0/8
@@ -96,8 +96,8 @@ server:
     verbosity: 0
 
     interface: 127.0.0.1
-    # NOTE: "interface: 0.0.0.0" would make Unbound listen on all IPs 
-    # configured for the Pi rather than just localhost (127.0.0.1) 
+    # NOTE: "interface: 0.0.0.0" would make Unbound listen on all IPs
+    # configured for the Pi rather than just localhost (127.0.0.1)
     # so that other machines on the local network can access DNS on the Pi
 
     port: 5335
@@ -192,13 +192,13 @@ server=/ninerealmlabs.com/10.0.0.1
 
 
 read -p "Set up additional conditional forwarding? (y/n): " CHOICE
-case "$CHOICE" in 
+case "$CHOICE" in
   y|Y ) ADDITIONAL_CONDITIONAL=true;;
   n|N ) ADDITIONAL_CONDITIONAL=false;;
   * ) echo "invalid";;
 esac
 
-if [ $ADDITIONAL_CONDITIONAL = true]; then
+if [ $ADDITIONAL_CONDITIONAL = true ]; then
     # WARNING: this will overwrite and replace /etc/dnsmasq.d/02-custom.conf!
     # make backup if file exists
     [ -f "/etc/dnsmasq.d/02-custom.conf" ] \
@@ -228,26 +228,26 @@ fi
 ###########################
 
 read -p "Set up piOLED display? (y/n): " CHOICE
-case "$CHOICE" in 
+case "$CHOICE" in
   y|Y ) OLED=true;;
   n|N ) OLED=false;;
   * ) echo "invalid";;
 esac
 
-if [ $OLED = true]; then
+if [ $OLED = true ]; then
     echo "\n Installing display..."
     # install dependencies
     sudo apt install python3-pip
     sudo apt install python3-pil
-    sudo pip3 install RPI.GPIO gpiozero adafruit-blinka adafruit-circuitpython-ssd1306 requests
+    pip3 install RPI.GPIO gpiozero adafruit-blinka adafruit-circuitpython-ssd1306 requests
     wget http://kottke.org/plus/type/silkscreen/download/silkscreen.zip
     unzip silkscreen.zip
     rm silkscreen.zip && rm readme.txt && rm -r __MACOSX/
 
     # create service
-    sudo cp stats.service /etc/systemd/system/stats.service \
+    sudo cp /home/pi/scripts/stats.service /etc/systemd/system/stats.service \
     && sudo systemctl start stats.service \
-    && sudo systemctl enable stats.service  
+    && sudo systemctl enable stats.service
 fi
 
 ##########################

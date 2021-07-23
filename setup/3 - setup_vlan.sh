@@ -1,5 +1,6 @@
 #!/bin/bash
 # script to set up 'default' vlan config for pihole
+# ref: https://engineerworkshop.com/blog/raspberry-pi-vlan-how-to-connect-your-rpi-to-multiple-networks/
 
 # set ip
 read -p "Please provide target IP (10.0.__.__): " IP
@@ -10,16 +11,23 @@ read -p "Please provide target IP (10.0.__.__): " IP
 sudo apt install vlan
 
 ### update network interfaces
-# # WARNING: this will overwrite and replace /etc/network/interfaces.d/interfaces!
-# # make backup if file exists
-# [ -f "/etc/network/interfaces.d/interfaces" ] \
-#     && sudo cp /etc/network/interfaces.d/interfaces \
-#     /etc/network/interfaces.d/interfaces.old
+# WARNING: this will overwrite and replace /etc/network/interfaces.d/interfaces!
+# make backup if file exists
+[ -f "/etc/network/interfaces.d/interfaces" ] \
+    && sudo cp /etc/network/interfaces.d/interfaces \
+    /etc/network/interfaces.d/interfaces.old
+echo = \
+'auto lo
+iface lo inet loopback
+
+allow-hotplug eth0
+auto eth0
+iface eth0 inet manual
+'
 
 # create vlan interfaces
 echo = \
-'
-# allow-hotplug eth0
+'# allow-hotplug eth0
 # # VLAN 86 is native; does not need specification
 # auto eth0
 # iface eth0 inet manual
@@ -59,9 +67,9 @@ static routers=10.0.0.1
 static domain_name_servers=127.0.0.1#5335
 
 #interface eth0.86
-#  static ip_address=10.0.'$IP'/22
-#  static routers=10.0.0.1
-#  static domain_name_servers=127.0.0.1#5335
+#static ip_address=10.0.'$IP'/22
+#static routers=10.0.0.1
+#static domain_name_servers=127.0.0.1#5335
 
 interface eth0.10
 static ip_address=10.1.'$IP'/22
@@ -87,8 +95,7 @@ static domain_name_servers=127.0.0.1#5335
 
 
 echo \
-'
-interface=eth0
+'interface=eth0
 #interface=eth0.86  # this is the native vlan
 interface=eth0.10
 interface=eth0.20
