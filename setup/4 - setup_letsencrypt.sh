@@ -5,7 +5,7 @@
 NAME=`hostname`
 
 # change permissions on copied files
-chown $(whoami):$(whoami) ~/.secrets/certbot/cloudflare.ini 
+chown $(whoami):$(whoami) ~/.secrets/certbot/cloudflare.ini
 sudo chmod 0700 ~/.secrets/
 sudo chmod 400 ~/.secrets/certbot/cloudflare.ini
 
@@ -15,6 +15,26 @@ sudo chmod 400 ~/.secrets/certbot/cloudflare.ini
 echo "Installing certbot..."
 sudo apt install certbot python3-certbot-dns-cloudflare -y
 pip3 install --upgrade certbot certbot-dns-cloudflare cloudflare
+
+################################
+###   set up deploy script   ###
+################################
+sudo mkdir -p /etc/letsencrypt/renewal-hooks/deploy
+sudo mkdir -p /etc/letsencrypt/live/
+# echo \
+# '#!/bin/bash
+# # assumes certbot will be run as root from crontab
+# # place script in /etc/letsencrypt/renewal-hooks/deploy for autorun
+# # `47 3 * * * root /root/certbot-auto renew --noninteractive --quiet --no-self-$
+# cat /etc/letsencrypt/live/${HOSTNAME}.ninerealmlabs.com/privkey.pem \
+#         /etc/letsencrypt/live/${HOSTNAME}.ninerealmlabs.com/cert.pem | \
+# tee /etc/letsencrypt/live/${HOSTNAME}.ninerealmlabs.com/combined.pem
+
+# systemctl reload-or-try-restart lighttpd
+# ' \
+# | sudo tee /etc/letsencrypt/renewal-hooks/deploy/deploy-certs-4-pihole.sh
+sudo cp /home/pi/scripts/deploy-certs-4-pihole.sh /etc/letsencrypt/renewal-hooks/deploy/
+sudo chmod 775 /etc/letsencrypt/renewal-hooks/deploy/deploy-certs-4-pihole.sh
 
 ############################
 ###   get certificates   ###
@@ -26,16 +46,14 @@ sudo certbot certonly \
   --dns-cloudflare \
   --dns-cloudflare-credentials /home/pi/.secrets/certbot/cloudflare.ini \
   --dns-cloudflare-propagation-seconds 60 \
-  -d $NAME.ninerealmlabs.com
+  -d $HOSTNAME.ninerealmlabs.com
 
 # test renewal
 sudo certbot renew --dry-run
 
 # add to crontab (find and replace existing certbot script with grep)
 ( crontab -l 2> /dev/null | grep -Fv certbot ; \
-printf -- "47 3 * * * root /root/certbot-auto renew --quiet --no-self-upgrade --renew-hook \
-'cat \$RENEWED_LINEAGE/privkey.pem \$RENEWED_LINEAGE/cert.pem > \$RENEWED_LINEAGE/combined.pem; \
-systemctl reload-or-try-restart lighttpd'\n" ) \
+printf -- "47 3 * * * root certbot renew --noninteractive --quiet --no-self-upgrade\n" ) \
 | crontab
 
 
@@ -47,9 +65,9 @@ echo "Enabling HTTPS redirection..."
 # sudo apt install --upgrade php7.3-common php7.3-cgi php7.3
 
 # create combined certificate
-sudo cat /etc/letsencrypt/live/$NAME.ninerealmlabs.com/privkey.pem \
-        /etc/letsencrypt/live/$NAME.ninerealmlabs.com/cert.pem | \
-sudo tee /etc/letsencrypt/live/$NAME.ninerealmlabs.com/combined.pem
+sudo cat /etc/letsencrypt/live/$HOSTNAME.ninerealmlabs.com/privkey.pem \
+        /etc/letsencrypt/live/$HOSTNAME.ninerealmlabs.com/cert.pem | \
+sudo tee /etc/letsencrypt/live/$HOSTNAME.ninerealmlabs.com/combined.pem
 
 # ensure lightpd user 'www-data' can read certs
 sudo chown www-data -R /etc/letsencrypt/live
@@ -62,15 +80,15 @@ sudo chown www-data -R /etc/letsencrypt/live
 
 echo \
 '
-$HTTP["host"] == "'$NAME'.ninerealmlabs.com" {
+$HTTP["host"] == "'${HOSTNAME}'.ninerealmlabs.com" {
   # Ensure the Pi-hole Block Page knows that this is not a blocked domain
   setenv.add-environment = ("fqdn" => "true")
 
   # Enable the SSL engine with a LE cert, only for this specific host
   $SERVER["socket"] == ":443" {
     ssl.engine = "enable"
-    ssl.pemfile = "/etc/letsencrypt/live/'$NAME'.ninerealmlabs.com/combined.pem"
-    ssl.ca-file =  "/etc/letsencrypt/live/'$NAME'.ninerealmlabs.com/chain.pem"
+    ssl.pemfile = "/etc/letsencrypt/live/'${HOSTNAME}'.ninerealmlabs.com/combined.pem"
+    ssl.ca-file =  "/etc/letsencrypt/live/'${HOSTNAME}'.ninerealmlabs.com/chain.pem"
     ssl.honor-cipher-order = "enable"
     ssl.cipher-list = "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH"
     ssl.use-sslv2 = "disable"
