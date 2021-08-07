@@ -18,7 +18,7 @@ sudo systemctl enable keepalived.service
 ###########################
 echo 'Installing keepalived scripts...'
 sudo mkdir -p /etc/keepalived
-sudo cp /home/pi/keepalived/check_ftl.sh  /etc/keepalived/check_ftl.sh
+sudo cp /home/pi/keepalived/check_ftl.sh /etc/keepalived/check_ftl.sh
 sudo chmod 755 /etc/keepalived/check_ftl.sh
 
 sudo cp /home/pi/keepalived/restart_dns.sh /etc/keepalived/restart_dns.sh
@@ -29,17 +29,17 @@ sudo chmod 755 /etc/keepalived/restart_dns.sh
 ###################################
 read -p "Will this be MAIN or BACKUP? (m/b): " CHOICE
 case "$CHOICE" in
-  m|M ) MAIN=true;;
-  b|B ) MAIN=false;;
-  * ) echo "invalid";;
+  m | M) MAIN=true ;;
+  b | B) MAIN=false ;;
+  *) echo "invalid" ;;
 esac
 
 if [ $MAIN = true ]; then
-    echo "Installing MAIN keepalived.conf..."
-    sudo cp /home/pi/keepalived/keepalived-main.conf /etc/keepalived/keepalived.conf
+  echo "Installing MAIN keepalived.conf..."
+  sudo cp /home/pi/keepalived/keepalived-main.conf /etc/keepalived/keepalived.conf
 else
-    echo "Installing BACKUP keepalived.conf..."
-    sudo cp /home/pi/keepalived/keepalived-secondary.conf /etc/keepalived/keepalived.conf
+  echo "Installing BACKUP keepalived.conf..."
+  sudo cp /home/pi/keepalived/keepalived-secondary.conf /etc/keepalived/keepalived.conf
 fi
 
 ###########################################

@@ -14,10 +14,10 @@ sudo apt install vlan
 # WARNING: this will overwrite and replace /etc/network/interfaces.d/interfaces!
 # make backup if file exists
 [ -f "/etc/network/interfaces.d/interfaces" ] \
-    && sudo cp /etc/network/interfaces.d/interfaces \
+  && sudo cp /etc/network/interfaces.d/interfaces \
     /etc/network/interfaces.d/interfaces.old
 echo = \
-'auto lo
+  'auto lo
 iface lo inet loopback
 
 allow-hotplug eth0
@@ -27,7 +27,7 @@ iface eth0 inet manual
 
 # create vlan interfaces
 echo = \
-'# allow-hotplug eth0
+  '# allow-hotplug eth0
 # # VLAN 86 is native; does not need specification
 # auto eth0
 # iface eth0 inet manual
@@ -56,11 +56,11 @@ iface eth0.30 inet manual
 # network 10.3.0.0/20
 # broadcast 10.3.15.255
 ' \
-| sudo tee /etc/network/interfaces.d/vlans
+  | sudo tee /etc/network/interfaces.d/vlans
 
 ### update dhcpcd.conf (append)
 echo \
-'
+  '
 interface eth0
 static ip_address=10.0.'$IP'/22
 static routers=10.0.0.1
@@ -86,23 +86,21 @@ static ip_addresses=10.3.'$IP'/20
 static routers=10.3.0.1
 static domain_name_servers=127.0.0.1#5335
 ' \
-| sudo tee -a /etc/dhcpcd.conf
+  | sudo tee -a /etc/dhcpcd.conf
 
 ### update dnsmasq
 # make backup if file exists
 [ -f "/etc/dnsmasq.d/99-interfaces.conf" ] \
-    && cp /etc/dnsmasq.d/99-interfaces.conf /etc/dnsmasq.d/99-interfaces.conf.old
-
+  && cp /etc/dnsmasq.d/99-interfaces.conf /etc/dnsmasq.d/99-interfaces.conf.old
 
 echo \
-'interface=eth0
+  'interface=eth0
 #interface=eth0.86  # this is the native vlan
 interface=eth0.10
 interface=eth0.20
 interface=eth0.30
 ' \
-| sudo tee /etc/dnsmasq.d/99-interfaces.conf
-
+  | sudo tee /etc/dnsmasq.d/99-interfaces.conf
 
 ### Cleanup & Reminders ###
 echo "Have you trunked the switch port to the pi???"

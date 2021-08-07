@@ -2,7 +2,7 @@
 # script to set up letsencrypt ssl certificates
 
 # initial setup
-NAME=`hostname`
+NAME=$(hostname)
 
 # change permissions on copied files
 chown $(whoami):$(whoami) ~/.secrets/certbot/cloudflare.ini
@@ -52,10 +52,11 @@ sudo certbot certonly \
 sudo certbot renew --dry-run
 
 # add to crontab (find and replace existing certbot script with grep)
-( crontab -l 2> /dev/null | grep -Fv certbot ; \
-printf -- "47 3 * * * root certbot renew --noninteractive --quiet --no-self-upgrade\n" ) \
-| crontab
-
+(
+  crontab -l 2> /dev/null | grep -Fv certbot
+  printf -- "47 3 * * * root certbot renew --noninteractive --quiet --no-self-upgrade\n"
+) \
+  | crontab
 
 #########################################
 ###   enable https in web interface   ###
@@ -66,8 +67,8 @@ echo "Enabling HTTPS redirection..."
 
 # create combined certificate
 sudo cat /etc/letsencrypt/live/$HOSTNAME.ninerealmlabs.com/privkey.pem \
-        /etc/letsencrypt/live/$HOSTNAME.ninerealmlabs.com/cert.pem | \
-sudo tee /etc/letsencrypt/live/$HOSTNAME.ninerealmlabs.com/combined.pem
+  /etc/letsencrypt/live/$HOSTNAME.ninerealmlabs.com/cert.pem \
+  | sudo tee /etc/letsencrypt/live/$HOSTNAME.ninerealmlabs.com/combined.pem
 
 # ensure lightpd user 'www-data' can read certs
 sudo chown www-data -R /etc/letsencrypt/live
@@ -75,11 +76,11 @@ sudo chown www-data -R /etc/letsencrypt/live
 ### copy into /etc/lighttpd/external.conf
 # create backup
 [ -f "/etc/lighttpd/external.conf" ] \
-    && sudo cp /etc/lighttpd/external.conf \
+  && sudo cp /etc/lighttpd/external.conf \
     /etc/lighttpd/external.conf.old
 
 echo \
-'
+  '
 $HTTP["host"] == "'${HOSTNAME}'.ninerealmlabs.com" {
   # Ensure the Pi-hole Block Page knows that this is not a blocked domain
   setenv.add-environment = ("fqdn" => "true")
@@ -103,7 +104,7 @@ $HTTP["host"] == "'${HOSTNAME}'.ninerealmlabs.com" {
   }
 }
 ' \
-| sudo tee /etc/lighttpd/external.conf
+  | sudo tee /etc/lighttpd/external.conf
 
 echo "Restarting lighttpd web server..."
 # restart web server

@@ -13,7 +13,6 @@
 echo "Updating pi..."
 sudo apt update && sudo apt upgrade -y
 
-
 ################################
 ###   install ufw firewall   ###
 ################################
@@ -22,7 +21,7 @@ sudo apt install ufw
 # set defaults
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
-    ### port restrictions
+### port restrictions
 # allow ssh access
 sudo ufw allow from 10.0.0.0/8 to any port 22
 sudo ufw limit ssh/tcp
@@ -40,7 +39,6 @@ sudo ufw allow from 10.0.0.0/8 to any proto igmp
 sudo ufw enable
 sudo ufw status
 
-
 ############################
 ###   install fail2ban   ###
 ############################
@@ -49,16 +47,14 @@ sudo apt install fail2ban
 
 # ignore HomeAssistant (and HomeLab) requests
 echo \
-'[DEFAULT]
+  '[DEFAULT]
 # "ignoreip" can be an IP address, a CIDR mask or a DNS host. Fail2ban will not
 # ban a host which matches an address in this list. Several addresses can be
 # defined using space separator.
 
 ignoreip = 127.0.0.0/8 10.0.0.0/8
-'\
-| sudo tee /etc/fail2ban/jail.d/jail.local
-
-
+' \
+  | sudo tee /etc/fail2ban/jail.d/jail.local
 
 ##########################
 ###   install pihole   ###
@@ -69,7 +65,6 @@ curl -sSL https://install.pi-hole.net | bash
 # change default web admin password
 echo "\nUpdate pihole password:"
 sudo pihole -a -p
-
 
 ###########################
 ###   install unbound   ###
@@ -86,10 +81,10 @@ sudo chown unbound /var/log/unbound/unbound.log
 # WARNING: this will overwrite and replace /etc/unbound/unbound.conf.d/pi-hole.conf!
 # make backup if file exists
 [ -f "/etc/unbound/unbound.conf.d/pi-hole.conf" ] \
-    && sudo cp /etc/unbound/unbound.conf.d/pi-hole.conf /etc/unbound/unbound.conf.d/pi-hole.conf.old
+  && sudo cp /etc/unbound/unbound.conf.d/pi-hole.conf /etc/unbound/unbound.conf.d/pi-hole.conf.old
 
 echo \
-'
+  '
 server:
     # If no logfile is specified, syslog is used
     # logfile: "/var/log/unbound/unbound.log"
@@ -158,7 +153,7 @@ forward-zone:
     forward-addr: 1.0.0.1@853  #cloudflare-dns.com
     forward-ssl-upstream: yes
 ' \
-| sudo tee /etc/unbound/unbound.conf.d/pi-hole.conf
+  | sudo tee /etc/unbound/unbound.conf.d/pi-hole.conf
 
 # restart unbound with new configuration
 sudo service unbound restart
@@ -182,30 +177,29 @@ echo "Setting up standard conditional forwarding..."
 # WARNING: this will overwrite and replace /etc/dnsmasq.d/01-pihole.conf!
 # make backup if file exists
 [ -f "/etc/dnsmasq.d/01-pihole.conf" ] \
-    && sudo cp /etc/dnsmasq.d/01-pihole.conf /etc/dnsmasq.d/01-pihole.conf.old
+  && sudo cp /etc/dnsmasq.d/01-pihole.conf /etc/dnsmasq.d/01-pihole.conf.old
 echo \
-'
+  '
 rev-server=10.0.0.0/8,10.0.0.1
 server=/ninerealmlabs.com/10.0.0.1
 ' \
-| sudo tee --append /etc/dnsmasq.d/01-pihole.conf
-
+  | sudo tee --append /etc/dnsmasq.d/01-pihole.conf
 
 read -p "Set up additional conditional forwarding? (y/n): " CHOICE
 case "$CHOICE" in
-  y|Y ) ADDITIONAL_CONDITIONAL=true;;
-  n|N ) ADDITIONAL_CONDITIONAL=false;;
-  * ) echo "invalid";;
+  y | Y) ADDITIONAL_CONDITIONAL=true ;;
+  n | N) ADDITIONAL_CONDITIONAL=false ;;
+  *) echo "invalid" ;;
 esac
 
 if [ $ADDITIONAL_CONDITIONAL = true ]; then
-    # WARNING: this will overwrite and replace /etc/dnsmasq.d/02-custom.conf!
-    # make backup if file exists
-    [ -f "/etc/dnsmasq.d/02-custom.conf" ] \
-        && sudo cp /etc/dnsmasq.d/02-custom.conf /etc/dnsmasq.d/02-custom.conf.old
+  # WARNING: this will overwrite and replace /etc/dnsmasq.d/02-custom.conf!
+  # make backup if file exists
+  [ -f "/etc/dnsmasq.d/02-custom.conf" ] \
+    && sudo cp /etc/dnsmasq.d/02-custom.conf /etc/dnsmasq.d/02-custom.conf.old
 
-    # tell pihole to forward all requests for domain to router
-    echo \
+  # tell pihole to forward all requests for domain to router
+  echo \
     '
     server=/pihole.ninerealmlabs.com/10.0.0.1
     server=/pi-hole.ninerealmlabs.com/10.0.0.1
@@ -222,30 +216,29 @@ if [ $ADDITIONAL_CONDITIONAL = true ]; then
     | sudo tee /etc/dnsmasq.d/02-custom.conf
 fi
 
-
 ###########################
 ###   install display   ###
 ###########################
 
 read -p "Set up piOLED display? (y/n): " CHOICE
 case "$CHOICE" in
-  y|Y ) OLED=true;;
-  n|N ) OLED=false;;
-  * ) echo "invalid";;
+  y | Y) OLED=true ;;
+  n | N) OLED=false ;;
+  *) echo "invalid" ;;
 esac
 
 if [ $OLED = true ]; then
-    echo "\n Installing display..."
-    # install dependencies
-    sudo apt install python3-pip
-    sudo apt install python3-pil
-    pip3 install RPI.GPIO gpiozero adafruit-blinka adafruit-circuitpython-ssd1306 requests
-    wget http://kottke.org/plus/type/silkscreen/download/silkscreen.zip
-    unzip silkscreen.zip
-    rm silkscreen.zip && rm readme.txt && rm -r __MACOSX/
+  echo "\n Installing display..."
+  # install dependencies
+  sudo apt install python3-pip
+  sudo apt install python3-pil
+  pip3 install RPI.GPIO gpiozero adafruit-blinka adafruit-circuitpython-ssd1306 requests
+  wget http://kottke.org/plus/type/silkscreen/download/silkscreen.zip
+  unzip silkscreen.zip
+  rm silkscreen.zip && rm readme.txt && rm -r __MACOSX/
 
-    # create service
-    sudo cp /home/pi/scripts/stats.service /etc/systemd/system/stats.service \
+  # create service
+  sudo cp /home/pi/scripts/stats.service /etc/systemd/system/stats.service \
     && sudo systemctl start stats.service \
     && sudo systemctl enable stats.service
 fi

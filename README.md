@@ -4,9 +4,9 @@
 
 1. [Raspberry Pi Zero W](https://www.adafruit.com/product/3409)
 2. [Colored header for Pi Zero](https://www.adafruit.com/product/3907)
-3. *__optional__* [microUSB to ethernet dongle](https://www.amazon.com/gp/product/B00RM3KXAU/)
-4. *__optional__* [PiOLED 128x32 screen](https://www.adafruit.com/product/3527)
-5. *__optional__* momentary switch (something like [these](https://www.amazon.com/Cylewet-Momentary-Button-Switch-CYT1078/dp/B0752RMB7Q/))
+3. _**optional**_ [microUSB to ethernet dongle](https://www.amazon.com/gp/product/B00RM3KXAU/)
+4. _**optional**_ [PiOLED 128x32 screen](https://www.adafruit.com/product/3527)
+5. _**optional**_ momentary switch (something like [these](https://www.amazon.com/Cylewet-Momentary-Button-Switch-CYT1078/dp/B0752RMB7Q/))
 
 ## Instructions
 
@@ -31,10 +31,11 @@ From a fresh Raspbian OS install:
    ```sh
    sudo sed -i -e '/# Additional overlays and parameters are documented/a\' -e 'dtoverlay=disable-bt' /boot/config.txt
    sudo sed -i -e '/# Additional overlays and parameters are documented/a\' -e 'dtoverlay=disable-wifi' /boot/config.txt
-   sudo sed -i -e'/# Additional overlays and parameters are documented/a\' -e  '# Disable wifi' /boot/config.txt
+   sudo sed -i -e'/# Additional overlays and parameters are documented/a\' -e '# Disable wifi' /boot/config.txt
    ```
 
-3. From *local admin computer*:
+3. From _local admin computer_:
+
    1. Copy SSH keys:
 
       ```sh
@@ -49,79 +50,82 @@ From a fresh Raspbian OS install:
       ```
 
 4. SSH into remote pi:
-   1. *Update setup scripts to update internal ip addresses, since these are hardcoded*
-   2. Initial setup (*Do not run with `sudo`*):
+
+   1. _Update setup scripts to update internal ip addresses, since these are hardcoded_
+   2. Initial setup (_Do not run with `sudo`_):
 
       ```sh
-      sh 0\ -\ setup_host.sh            # to complete host setup
-      sh 1\ -\ setup_log2ram.sh         # to install log2ram
-      sh 2\ -\ setup_pihole.sh          # to enable firewall, and install pihole
+      sh 0\ -\ setup_host.sh    # to complete host setup
+      sh 1\ -\ setup_log2ram.sh # to install log2ram
+      sh 2\ -\ setup_pihole.sh  # to enable firewall, and install pihole
       ```
 
    3. Complete [vlan setup](https://engineerworkshop.com/blog/raspberry-pi-vlan-how-to-connect-your-rpi-to-multiple-networks/)
-      *Don't forget to update the VLAN configuration on the router & switch!!!*
+      _Don't forget to update the VLAN configuration on the router & switch!!!_
 
       ```sh
-      sh 3\ -\ setup_vlan.sh            # to complete vlan setup
+      sh 3\ -\ setup_vlan.sh # to complete vlan setup
       ```
 
    4. Letsencrypt setup
-      * Run setup script
+
+      - Run setup script
 
         ```sh
-        sh 4\ -\ setup_letsencrypt.sh     # to complete letsencrypt certification
+        sh 4\ -\ setup_letsencrypt.sh # to complete letsencrypt certification
         ```
 
-       * Add `letsencrypt_for_pihole.sh` as crontab:
+      - Add `letsencrypt_for_pihole.sh` as crontab:
 
-         ```sh
-         crontab -e
-         ```
+        ```sh
+        crontab -e
+        ```
 
-         In crontab:
+        In crontab:
 
-         ```sh
-         2 4 * * * /path/to/letsencrypt_for_pihole.sh
-         ```
+        ```sh
+        2 4 * * * /path/to/letsencrypt_for_pihole.sh
+        ```
 
    5. Keepalived setup (use the keepalived virtual IP as the DNS source)
 
       ```sh
-      sh 5\ -\ setup_keepalived.sh      # to complete keepalived HA
+      sh 5\ -\ setup_keepalived.sh # to complete keepalived HA
       ```
 
 5. Set up [shutdown/reboot button](https://scruss.com/blog/2017/10/21/combined-restart-shutdown-button-for-raspberry-pi/) with [shutdown.py script](./scripts/shutdown.py):
-    * create [shutdown service for systemctl](./scripts/shutdown.service) and copy to destination
 
-      ```sh
-      sudo cp shutdown.service /etc/systemd/system/shutdown.service
-      ```
+   - create [shutdown service for systemctl](./scripts/shutdown.service) and copy to destination
 
-    * start service
+     ```sh
+     sudo cp shutdown.service /etc/systemd/system/shutdown.service
+     ```
 
-      ```sh
-      sudo systemctl start shutdown.service
-      ```
+   - start service
 
-    * set shutdown service to run on startup
+     ```sh
+     sudo systemctl start shutdown.service
+     ```
 
-      ```sh
-      sudo systemctl enable shutdown.service
-      ```
+   - set shutdown service to run on startup
+
+     ```sh
+     sudo systemctl enable shutdown.service
+     ```
 
 6. Enable showing pihole stats on piOled with [stats.py script](./scripts/stats.py)
 
-    * create [stats service for systemctl](./scripts/stats.service) and copy to destination
+   - create [stats service for systemctl](./scripts/stats.service) and copy to destination
 
-      ```sh
-      sudo cp stats.service /etc/systemd/system/stats.service
-      ```
+     ```sh
+     sudo cp stats.service /etc/systemd/system/stats.service
+     ```
 
-    * start &  stats service to run on startup
-      ```sh
-      sudo systemctl start stats.service
-      sudo systemctl enable stats.service
-      ```
+   - start & stats service to run on startup
+     ```sh
+     sudo systemctl start stats.service
+     sudo systemctl enable stats.service
+     ```
 
 ### 2. Pihole setup
 
@@ -129,11 +133,11 @@ From a fresh Raspbian OS install:
 
 1. Set: "Listen on all interfaces; permit all origins"
 2. Uncheck / deselect:
-   * [ ] "Never forward non-FQDNs"
-   * [ ] "Never forward reverse lookups for private IP ranges"
+   - [ ] "Never forward non-FQDNs"
+   - [ ] "Never forward reverse lookups for private IP ranges"
 3. Set up **conditional forwarding** to dhcp server / domain
 4. [edit /etc/pihole/setupVars.conf](https://www.reddit.com/r/pihole/comments/a9ktnl/getting_pihole_to_do_reverse_lookup/) and add the reverse lookups:
-    `CONDITIONAL_FORWARDING_REVERSE=10.in-addr.arpa`
+   `CONDITIONAL_FORWARDING_REVERSE=10.in-addr.arpa`
 5. Run `pihole -r` to repair using the updated setupVars.conf file
 
 #### Restore settings with Transporter
@@ -159,6 +163,7 @@ https://www.github.developerdan.com/hosts/lists/amp-hosts-extended.txt
 ```
 
 ### 3. Keep piholes in sync with [gravity sync](https://github.com/vmstan/gravity-sync)
+
 <!-- * [pihole-cloudsync](https://github.com/stevejenkins/pihole-cloudsync) -->
 
 1. Install on primary
