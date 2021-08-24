@@ -11,7 +11,9 @@
 ###   update   ###
 ##################
 echo "Updating pi..."
-sudo apt update && sudo apt upgrade -y
+sudo apt update
+sudo apt dist-upgrade -y
+sudo apt install unattended-upgrades -y
 
 ################################
 ###   install ufw firewall   ###
