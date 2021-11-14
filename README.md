@@ -218,3 +218,8 @@ https://www.github.developerdan.com/hosts/lists/amp-hosts-extended.txt
    4. Local Zone: `typetransparent`
 
 ### 5. [Back up the card!](https://computers.tutsplus.com/articles/how-to-clone-raspberry-pi-sd-cards-using-the-command-line-in-os-x--mac-59911)
+
+```sh
+# to back up:
+ssh pi@<NAME> "sudo dd if=/dev/mmcblk0 bs=1M | gzip -" | cat > ~/pihole_backup.gz
+```
