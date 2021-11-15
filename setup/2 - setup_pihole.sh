@@ -18,7 +18,7 @@ sudo apt install unattended-upgrades -y
 ################################
 ###   install ufw firewall   ###
 ################################
-echo "\nInstalling ufw firewall..."
+echo -e "\nInstalling ufw firewall..."
 sudo apt install ufw
 # set defaults
 sudo ufw default deny incoming
@@ -44,7 +44,7 @@ sudo ufw status
 ############################
 ###   install fail2ban   ###
 ############################
-echo "\nInstalling fail2ban..."
+echo -e "\nInstalling fail2ban..."
 sudo apt install fail2ban
 
 # ignore HomeAssistant (and HomeLab) requests
@@ -61,11 +61,11 @@ ignoreip = 127.0.0.0/8 10.0.0.0/8
 ##########################
 ###   install pihole   ###
 ##########################
-echo "\nInstalling pihole..."
+echo -e "\nInstalling pihole..."
 curl -sSL https://install.pi-hole.net | bash
 
 # change default web admin password
-echo "\nUpdate pihole password:"
+echo -e "\nUpdate pihole password:"
 sudo pihole -a -p
 
 ###########################
@@ -161,13 +161,13 @@ forward-zone:
 sudo service unbound restart
 
 # set pihole to use unbound
-echo "\nReconfiguring pihole to use unbound:"
+echo -e "\nReconfiguring pihole to use unbound:"
 echo "Set dns to 127.0.0.1#5335"
 read -p "Press any key to continue..." input
 pihole -r
 
 # edit dhcpcd.conf to use unbound
-echo "\nUpdating DNS in /etc/dhcpcd.conf"
+echo -e "\nUpdating DNS in /etc/dhcpcd.conf"
 sudo sed -i 's/static domain_name_servers=1.1.1.1 1.0.0.1/static domain_name_servers=127.0.0.1#5335/' /etc/dhcpcd.conf
 sudo systemctl restart networking
 
@@ -230,7 +230,7 @@ case "$CHOICE" in
 esac
 
 if [ $OLED = true ]; then
-  echo "\n Installing display..."
+  echo -e "\n Installing display..."
   # install dependencies
   sudo apt install python3-pip
   sudo apt install python3-pil

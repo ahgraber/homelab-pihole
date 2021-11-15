@@ -5,7 +5,7 @@
 NAME=$(hostname)
 
 # change permissions on copied files
-chown $(whoami):$(whoami) ~/.secrets/certbot/cloudflare.ini
+chown "$(whoami)":"$(whoami)" ~/.secrets/certbot/cloudflare.ini
 sudo chmod 0700 ~/.secrets/
 sudo chmod 400 ~/.secrets/certbot/cloudflare.ini
 
@@ -46,7 +46,7 @@ sudo certbot certonly \
   --dns-cloudflare \
   --dns-cloudflare-credentials /home/pi/.secrets/certbot/cloudflare.ini \
   --dns-cloudflare-propagation-seconds 60 \
-  -d $HOSTNAME.ninerealmlabs.com
+  -d "$HOSTNAME.ninerealmlabs.com"
 
 # test renewal
 sudo certbot renew --dry-run
@@ -66,9 +66,9 @@ echo "Enabling HTTPS redirection..."
 # sudo apt install --upgrade php7.3-common php7.3-cgi php7.3
 
 # create combined certificate
-sudo cat /etc/letsencrypt/live/$HOSTNAME.ninerealmlabs.com/privkey.pem \
-  /etc/letsencrypt/live/$HOSTNAME.ninerealmlabs.com/cert.pem \
-  | sudo tee /etc/letsencrypt/live/$HOSTNAME.ninerealmlabs.com/combined.pem
+sudo cat "/etc/letsencrypt/live/$HOSTNAME.ninerealmlabs.com/privkey.pem" \
+  "/etc/letsencrypt/live/$HOSTNAME.ninerealmlabs.com/cert.pem" \
+  | sudo tee "/etc/letsencrypt/live/$HOSTNAME.ninerealmlabs.com/combined.pem"
 
 # ensure lightpd user 'www-data' can read certs
 sudo chown www-data -R /etc/letsencrypt/live

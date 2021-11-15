@@ -61,7 +61,7 @@ NTP=10.0.0.1 10.1.0.1
   | sudo tee /etc/systemd/timesyncd.conf
 
 # update hostname
-sudo hostnamectl set-hostname $NAME
+sudo hostnamectl set-hostname "$NAME"
 
 # WARNING: this will overwrite and replace /etc/hosts!
 # make backup if file exists
@@ -76,7 +76,7 @@ echo \
 ff02::1         ip6-allnodes
 ff02::2         ip6-allrouters
 
-127.0.1.1       '$NAME \
+127.0.1.1       '"$NAME" \
   | sudo tee /etc/hosts
 
 #################################
