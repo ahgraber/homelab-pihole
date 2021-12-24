@@ -123,7 +123,6 @@ From a fresh Raspbian OS install:
      ```
 
    - start & stats service to run on startup
-   -
 
      ```sh
      sudo systemctl start stats.service

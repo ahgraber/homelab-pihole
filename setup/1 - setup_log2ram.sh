@@ -8,6 +8,9 @@ wget -qO - https://azlux.fr/repo.gpg.key | sudo apt-key add -
 sudo apt update
 sudo apt install log2ram
 
+### update /etc/log2ram.conf
+# TODO: set SIZE larger?
+
 ### to uninstall
 # apt remove log2ram --purge
 # chmod +x /usr/local/bin/uninstall-log2ram.sh && sudo /usr/local/bin/uninstall-log2ram.sh
