@@ -12,9 +12,9 @@
 
 ### 0. [Set up Raspberry Pi](https://learn.adafruit.com/pi-hole-ad-blocker-with-pi-zero-w?view=all#prepare-the-pi)
 
-    * If your router has usb that provides sufficient power, power your pi from the usb out on the router
-    * Plug ethernet in if you have the optional dongle
-    * Set your router to provide the pi with a static IP address
+- If your router has usb that provides sufficient power, power your pi from the usb out on the router
+- Plug ethernet in if you have the optional dongle
+- Set your router to provide the pi with a static IP address
 
 ### 1. Host setup
 
@@ -43,9 +43,9 @@ From a fresh Raspbian OS install:
       ssh-copy-id -i ~/.ssh/ahg_ninerealmlabs_id_rsa.pub <username>@<server ip>
       ```
 
-   2. Copy files (from <git repo>/infrastructure/pihole/) by running
+   2. Copy files (from ./setup/) by running
 
-      ```sj
+      ```sh
       sh copy_to_pi.sh
       ```
 
@@ -93,7 +93,8 @@ From a fresh Raspbian OS install:
       sh 5\ -\ setup_keepalived.sh # to complete keepalived HA
       ```
 
-5. Set up [shutdown/reboot button](https://scruss.com/blog/2017/10/21/combined-restart-shutdown-button-for-raspberry-pi/) with [shutdown.py script](./scripts/shutdown.py):
+5. Set up [shutdown/reboot button](https://scruss.com/blog/2017/10/21/combined-restart-shutdown-button-for-raspberry-pi/)
+   with [shutdown.py script](./scripts/shutdown.py):
 
    - create [shutdown service for systemctl](./scripts/shutdown.service) and copy to destination
 
@@ -122,6 +123,8 @@ From a fresh Raspbian OS install:
      ```
 
    - start & stats service to run on startup
+   -
+
      ```sh
      sudo systemctl start stats.service
      sudo systemctl enable stats.service
@@ -136,7 +139,8 @@ From a fresh Raspbian OS install:
    - [ ] "Never forward non-FQDNs"
    - [ ] "Never forward reverse lookups for private IP ranges"
 3. Set up **conditional forwarding** to dhcp server / domain
-4. [edit /etc/pihole/setupVars.conf](https://www.reddit.com/r/pihole/comments/a9ktnl/getting_pihole_to_do_reverse_lookup/) and add the reverse lookups:
+4. [edit /etc/pihole/setupVars.conf](https://www.reddit.com/r/pihole/comments/a9ktnl/getting_pihole_to_do_reverse_lookup/)
+   and add the reverse lookups:
    `CONDITIONAL_FORWARDING_REVERSE=10.in-addr.arpa`
 5. Run `pihole -r` to repair using the updated setupVars.conf file
 
